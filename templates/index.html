@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+                                            <title>Math Practice</title>
+
+                                            <!--    Bootstrap-->
+                                            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+                                            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+
+
+    <!-- Fontawesome Icons -->
+    <script src="https://kit.fontawesome.com/bdb366186c.js" crossorigin="anonymous"></script>
+
+    <!-- Custom CSS-->
+    <link rel='stylesheet' href="static/css/style.css">
+</head>
+<body>
+    <div class="title bg-success p-5  justify-content-center">
+        <h1 class="fs-1 fw-bolder">
+            Math Zoom
+        </h1>
+    </div>
+
+    <div class="p-5 row">
+
+        <div class="col-3 justify-content-center">
+            {% set operation_in = url_for('practice_page', operation='addition')%}
+            <button class='btn btn-primary btn-lg download-btn p-3' type="button" onclick="window.location.href='{{ operation_in }}'"><i class="fa-solid fa-plus"></i> Addition</button>
+
+        </div>
+        <div class="col-3 justify-content-center">
+            {% set operation_in = url_for('practice_page', operation='subtraction')%}
+            <button class='btn btn-warning btn-lg download-btn p-3' type="button" onclick="window.location.href='{{ operation_in }}'"><i class="fa-solid fa-minus"></i> Subtraction</button>
+
+        </div>
+        <div class="col-3 justify-content-center">
+            {% set operation_in = url_for('practice_page', operation='multiplication')%}
+            <button class='btn btn-info btn-lg download-btn p-3' type="button" onclick="window.location.href='{{ operation_in }}'"><i class="fa-solid fa-xmark"></i> Multiplication</button>
+        </div>
+        <div class="col-3 justify-content-center">
+            {% set operation_in = url_for('practice_page', operation='division')%}
+            <button class='btn btn-dark btn-lg download-btn p-3' type="button" onclick="window.location.href='{{ operation_in }}'"><i class="fa-solid fa-divide"></i> Division</button>
+
+        </div>
+    </div>
+</body>
+</html>
