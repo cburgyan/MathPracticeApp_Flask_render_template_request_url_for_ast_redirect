@@ -1,5 +1,9 @@
-.title{
-    text-align: center;
+body{
+}
+
+div.col{
+    padding: 2rem;
+    font-size: 2rem;
 }
 
 button{
@@ -7,5 +11,24 @@ button{
 }
 
 .operation-btn{
+    text-align: center;
+}
+
+.floating-operations{
+    width: 100%;
+    height: 100%;
+    #object-fit: fill;
+    #background-repeat: no-repeat;
+    #background-size: cover;
+    #max-width: 100%;
+    #height: auto;
+}
+
+.symbol{
+    width: 2rem;
+    text-align: center;
+}
+
+.title{
     text-align: center;
 }
