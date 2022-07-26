@@ -10,6 +10,16 @@ button{
     margin: 10px;
 }
 
+hr {
+    text-align: center;
+    height: 4px;
+    color: #000;
+    background-color: #000;
+    border-color: #000;
+    border: none;
+    outline: none;
+}
+
 .operation-btn{
     text-align: center;
 }
@@ -31,4 +41,8 @@ button{
 
 .title{
     text-align: center;
+}
+
+.answer-text{
+    width: 90%;
 }

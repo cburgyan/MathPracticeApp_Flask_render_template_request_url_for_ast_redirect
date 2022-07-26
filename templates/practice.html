@@ -11,62 +11,61 @@
     <!-- Font Awesome icons (free version)-->
     <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
 
+
     <!-- Custom CSS-->
-    <link rel='stylesheet' href="static/css/style.css">
+    <link rel='stylesheet' href="{{ url_for('static', filename='css/style.css') }}">
 
 </head>
 <body>
-<!--    {% set text_color = 'black' %}-->
-<!--    {% if operation == 'addition': %}-->
-<!--    {% set coloring = 'primary' %}-->
-<!--    {% set text_color = 'white' %}-->
-<!--    {% endif %}-->
-<!--    {% if operation == 'subtraction': %}-->
-<!--    {% set coloring = 'warning' %}-->
-<!--    {% endif %}-->
-<!--    {% if operation == 'multiplication': %}-->
-<!--    {% set coloring = 'info' %}-->
-
-<!--    {% endif %}-->
-<!--    {% if operation == 'division': %}-->
-<!--    {% set text_color = 'white' %}-->
-<!--    {% set coloring = 'dark' %}-->
-<!--    {% endif %}-->
-
-    <div class="title bg-{{coloring}} text-{{text_color}} p-5">
+    {% if temp_coloring == '' %}
+    <div class="title bg-{{banner_color}} text-{{text_color}} p-5">
+        {% else %}
+    <div class="title bg-{{temp_coloring}} text-{{text_color}} p-5">
+        {% endif %}
         <h1 class="fs-1 fw-bolder">
             {{operation.title()}}
         </h1>
     </div>
-<!--    <div class="row">-->
-<!--        <div class="col">-->
-            <div class="row problem">
-                <div class="col symbol justify-content-bottom">
+    <div class="row problem">
+        <div class="col operands m-5">
+            <div class="row operand1">
+                <div class="col-1 text-end">
+                </div>
+                <div class="col-3 operand1">
+                    <h1>{{ operand1 }}</h1>
+                </div>
+            </div>
+            <div class="row operand2">
+                <div class="col-1 text-end">
                     <h1><i class="{{ symbol }}"></i></h1>
                 </div>
-                <div class="col operands">
-                    <div class="row operand1">
-                        <div class="col operand1">
-                            <h1>{{ operand1 }}</h1>
-                        </div>
-
-                    </div>
-                    <div class="row operand2">
-                        <div class="col operand2">
-                            <h1>{{ operand2 }}</h1>
-                        </div>
-
-                    </div>
+                <div class="col-3 operand2">
+                    <h1>{{ operand2 }}</h1>
                 </div>
+
             </div>
             <div class="row line">
-                <hr>
+                <div class="col-4 line">
+                    <hr>
+                </div>
             </div>
-            <div class="row answer">
-                <input type="text" class="answer-text">
+
+            <div class="row answer pw-0 mw-0">
+                <div class="col-4 answer pw-0 mw-0">
+                    <form action="{{ url_for('practice_page', operation=operation) }}" method="post">
+                        <input type="text" class="answer-text pe-0 pw-0 mw-0" name="guess">
+                        {% if guess != '' %}
+                        <label>{{ guess }}</label>
+                        {% endif %}
+                    </form>
+                </div>
             </div>
-<!--        </div>-->
-<!--    </div>-->
+        </div>
+    </div>
+
+    {% set main_page = url_for('main_page') %}
+    <button class='btn btn-light btn-lg download-btn p-3' type="button" onclick="window.location.href='{{ main_page }}'"><i class="fa-solid fa-house"></i> Main Page</button>
+
 
 </body>
 </html>

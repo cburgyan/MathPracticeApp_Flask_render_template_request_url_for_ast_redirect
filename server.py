@@ -1,31 +1,78 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, url_for
+import ast
 import random
 
+from werkzeug.utils import redirect
+
 app = Flask(__name__)
+app.config["CACHE_TYPE"] = "null"
 DIGITS = 3
+redirect_clock = True
+answer = -1
+coloring = 'vanilla'
+operand1 = -1
+operand2 = -1
+symbol = ''
+temp_coloring = ''
+prev_operation = ''
 
 @app.route('/')
 def main_page():
     return render_template('index.html')
 
-@app.route('/practice/<operation>')
+
+
+
+# @app.route('/practice/<operation>/<operand1>_<operand2>', methods=['POST', 'GET'])
+# def practice_response_page(operation, operand1, operand2):
+#     if request.method == 'POST':
+#         pass
+
+
+@app.route('/practice/<operation>', methods=['POST', 'GET'])
 def practice_page(operation):
-    if operation == 'addition':
-        coloring = 'primary'
-        oper1 = random.randint(10 ** (DIGITS - 1), 10 ** DIGITS - 1)
-        oper2 = random.randint(10 ** (DIGITS - 1), 10 ** DIGITS - 1)
-        answer = oper1 + oper2
-        symbol = "fa-solid fa-plus"
-    elif operation == 'subtraction':
-        coloring = 'warning'
-    elif operation == 'multiplication':
-        coloring = 'info'
-    elif operation == 'division':
-        coloring = 'dark'
-    return render_template('practice.html', operation=operation, coloring=coloring, operand1=oper1, operand2=oper2, answer=answer, symbol=symbol)
+    global redirect_clock, answer, operand1, operand2, coloring, symbol, temp_coloring, prev_operation
+
+    #Changing operation
+    if prev_operation != operation:
+        temp_coloring = ''
+        prev_operation = operation
+
+    if request.method == 'GET':
+        print('GETTing')
+        if operation == 'addition':
+            coloring = 'primary'
+            operand1 = random.randint(10 ** (DIGITS - 1), 10 ** DIGITS - 1)
+            operand2 = random.randint(10 ** (DIGITS - 1), 10 ** DIGITS - 1)
+            answer = operand1 + operand2
+            symbol = "fa-solid fa-plus"
+        elif operation == 'subtraction':
+            coloring = 'warning'
+        elif operation == 'multiplication':
+            coloring = 'info'
+        elif operation == 'division':
+            coloring = 'dark'
+        else:
+            coloring = 'light'
+            print('Something went wrong.')
+        return render_template('practice.html', operation=operation, banner_color=coloring, operand1=operand1, operand2=operand2, guess='', symbol=symbol, temp_coloring=temp_coloring)
+    else:
+        print(request.form['guess'])
+        guess = int(request.form['guess'])
+        if answer == guess:
+            print('Correct')
+            temp_coloring = 'success'
+            return redirect(url_for('practice_page', operation=operation))
+        else:
+            print('Incorrect')
+            temp_coloring = 'danger'
+            return render_template('practice.html', operation=operation, banner_color=coloring, operand1=operand1, operand2=operand2, guess=str(guess), symbol=symbol, temp_coloring=temp_coloring)
 
 
+def check_answer():
+    return 'hi'
 
 
 if __name__ == "__main__":
     app.run(debug=True)
+
