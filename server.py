@@ -16,17 +16,10 @@ symbol = ''
 temp_coloring = ''
 prev_operation = ''
 
+
 @app.route('/')
 def main_page():
     return render_template('index.html')
-
-
-
-
-# @app.route('/practice/<operation>/<operand1>_<operand2>', methods=['POST', 'GET'])
-# def practice_response_page(operation, operand1, operand2):
-#     if request.method == 'POST':
-#         pass
 
 
 @app.route('/practice/<operation>', methods=['POST', 'GET'])
@@ -40,18 +33,24 @@ def practice_page(operation):
 
     if request.method == 'GET':
         print('GETTing')
+        operand1 = random.randint(10 ** (DIGITS - 1), 10 ** DIGITS - 1)
+        operand2 = random.randint(10 ** (DIGITS - 1), 10 ** DIGITS - 1)
         if operation == 'addition':
             coloring = 'primary'
-            operand1 = random.randint(10 ** (DIGITS - 1), 10 ** DIGITS - 1)
-            operand2 = random.randint(10 ** (DIGITS - 1), 10 ** DIGITS - 1)
             answer = operand1 + operand2
             symbol = "fa-solid fa-plus"
         elif operation == 'subtraction':
             coloring = 'warning'
+            answer = operand1 - operand2
+            symbol = "fa-solid fa-minus"
         elif operation == 'multiplication':
             coloring = 'info'
+            answer = operand1 * operand2
+            symbol = "fa-solid fa-xmark"
         elif operation == 'division':
             coloring = 'dark'
+            answer = operand1 / operand2
+            symbol = "fa-solid fa-divide"
         else:
             coloring = 'light'
             print('Something went wrong.')
