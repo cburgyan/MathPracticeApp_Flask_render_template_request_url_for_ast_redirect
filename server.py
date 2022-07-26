@@ -19,8 +19,55 @@ symbol = ''
 temp_coloring = ''
 prev_operation = ''
 
+
 with open('data.txt', 'r') as file:
     file_dict = ast.literal_eval(file.readline())
+
+try:
+    print(file_dict[DIGITS])
+    print(file_dict)
+except Exception as error_message:
+    print(error_message)
+    file_dict[DIGITS] = {
+        'addition': {'correct': 0, 'wrong': 0, 'percent-correct': 0, 'total-time': 0, 'average-time-per-problem': 0},
+        'subtraction': {'correct': 0, 'wrong': 0, 'percent-correct': 0, 'total-time': 0, 'average-time-per-problem': 0},
+        'multiplication': {'correct': 0, 'wrong': 0, 'percent-correct': 0, 'total-time': 0, 'average-time-per-problem': 0},
+        'division': {'correct': 0, 'wrong': 0, 'percent-correct': 0, 'total-time': 0, 'average-time-per-problem': 0},
+    }
+
+
+def update_stats_for_right_or_wrong_answer(operation, answer1, guess1, time1=0):
+    #Get Operation-specific Data-set
+    stats_of_operation = -1
+    if operation == 'addition':
+        stats_of_operation = file_dict[DIGITS]['addition']
+    elif operation == 'subtraction':
+        stats_of_operation = file_dict[DIGITS]['subtraction']
+    elif operation == 'multiplication':
+        stats_of_operation = file_dict[DIGITS]['multiplication']
+    elif operation == 'division':
+        stats_of_operation = file_dict[DIGITS]['division']
+
+    #Record success or error
+    if str(answer1) == str(guess1):
+        stats_of_operation['correct'] += 1
+    else:
+        stats_of_operation['wrong'] += 1
+
+    #Update Percent-correct for operation
+    stats_of_operation['percent-correct'] = '{:.2f}'.format(stats_of_operation['correct'] / (stats_of_operation['correct'] + stats_of_operation['wrong']) * 100)
+
+    #Update total-time and average-time-per-problem
+    if time1 != 0:
+        stats_of_operation['total-time'] += time1
+        stats_of_operation['average-time-per-problem'] = round(stats_of_operation['total-time'] / (stats_of_operation['correct'] + stats_of_operation['wrong']))
+
+    #Update Record
+    if stats_of_operation != -1:
+        with open('data.txt', 'w') as file:
+            file.write(str(file_dict))
+
+
 
 
 @app.route('/')
@@ -71,25 +118,13 @@ def practice_page(operation):
         except ValueError:
             guess = str(request.form['guess'])
 
-        # print(type(guess))
-        # print(type(answer))
-        # print(guess)
-        # print(answer)
         if str(answer) == guess:
-            if operation == 'addition':
-                file_dict['addition'] = int(file_dict['addition']) + 1
-            elif operation == 'subtraction':
-                file_dict['subtraction'] = int(file_dict['subtraction']) + 1
-            elif operation == 'multiplication':
-                file_dict['multiplication'] = int(file_dict['multiplication']) + 1
-            elif operation == 'division':
-                file_dict['division'] = int(file_dict['division']) + 1
-            with open('data.txt', 'w') as file:
-                file.write(str(file_dict))
+            update_stats_for_right_or_wrong_answer(operation, answer, guess, time1=0)
             print('Correct')
             temp_coloring = 'success'
             return redirect(url_for('practice_page', operation=operation))
         else:
+            update_stats_for_right_or_wrong_answer(operation, answer, guess, time1=0)
             print('Incorrect')
             temp_coloring = 'danger'
             return render_template('practice.html', operation=operation, banner_color=coloring, operand1=operand1, operand2=operand2, guess=str(guess), symbol=symbol, temp_coloring=temp_coloring)
