@@ -16,6 +16,9 @@ symbol = ''
 temp_coloring = ''
 prev_operation = ''
 
+with open('data.txt', 'r') as file:
+    file_dict = ast.literal_eval(file.readline())
+
 
 @app.route('/')
 def main_page():
@@ -59,6 +62,16 @@ def practice_page(operation):
         print(request.form['guess'])
         guess = int(request.form['guess'])
         if answer == guess:
+            if operation == 'addition':
+                file_dict['addition'] = int(file_dict['addition']) + 1
+            elif operation == 'subtraction':
+                file_dict['subtraction'] = int(file_dict['subtraction']) + 1
+            elif operation == 'multiplication':
+                file_dict['multiplication'] = int(file_dict['multiplication']) + 1
+            elif operation == 'division':
+                file_dict['division'] = int(file_dict['division']) + 1
+            with open('data.txt', 'w') as file:
+                file.write(str(file_dict))
             print('Correct')
             temp_coloring = 'success'
             return redirect(url_for('practice_page', operation=operation))
