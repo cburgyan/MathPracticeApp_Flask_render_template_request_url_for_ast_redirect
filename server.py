@@ -2,6 +2,9 @@ from flask import Flask, render_template, request, url_for
 import ast
 import random
 
+
+#{ 'addition': '0', 'subtraction': '0', 'multiplication': '0', 'division': '0' }
+
 from werkzeug.utils import redirect
 
 app = Flask(__name__)
@@ -52,7 +55,10 @@ def practice_page(operation):
             symbol = "fa-solid fa-xmark"
         elif operation == 'division':
             coloring = 'dark'
-            answer = operand1 / operand2
+            answer = (operand1 / operand2)
+            print(answer)
+            answer = "{:.5f}".format(answer)
+            print(answer)
             symbol = "fa-solid fa-divide"
         else:
             coloring = 'light'
@@ -60,8 +66,16 @@ def practice_page(operation):
         return render_template('practice.html', operation=operation, banner_color=coloring, operand1=operand1, operand2=operand2, guess='', symbol=symbol, temp_coloring=temp_coloring)
     else:
         print(request.form['guess'])
-        guess = int(request.form['guess'])
-        if answer == guess:
+        try:
+            guess = str(request.form['guess'])
+        except ValueError:
+            guess = str(request.form['guess'])
+
+        # print(type(guess))
+        # print(type(answer))
+        # print(guess)
+        # print(answer)
+        if str(answer) == guess:
             if operation == 'addition':
                 file_dict['addition'] = int(file_dict['addition']) + 1
             elif operation == 'subtraction':
