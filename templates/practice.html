@@ -53,7 +53,7 @@
             <div class="row answer pw-0 mw-0">
                 <div class="col-4 answer pw-0 mw-0">
                     <form action="{{ url_for('practice_page', operation=operation) }}" method="post">
-                        <input type="text" class="answer-text pe-0 pw-0 mw-0" name="guess">
+                        <input type="text" class="answer-text pe-0 pw-0 mw-0" name="guess" autofocus>
                         {% if guess != '' %}
                         <label>{{ guess }}</label>
                         {% endif %}
