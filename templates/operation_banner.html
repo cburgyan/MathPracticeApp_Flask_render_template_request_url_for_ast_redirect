@@ -1,0 +1,10 @@
+<body>
+    {% if temp_coloring == '' %}
+    <div class="title bg-{{banner_color}} text-{{text_color}} p-5">
+        {% else %}
+    <div class="title bg-{{temp_coloring}} text-{{text_color}} p-5">
+        {% endif %}
+        <h1 class="fs-1 fw-bolder">
+            {{operation.title()}}
+        </h1>
+    </div>

@@ -22,9 +22,12 @@ prev_operation = ''
 start_time = -1
 stop_time = -1
 
-
-with open('data.txt', 'r') as file:
-    file_dict = ast.literal_eval(file.readline())
+try:
+    with open('data.txt', 'r') as file:
+        file_dict = ast.literal_eval(file.readline())
+except SyntaxError as error_message:
+    print(error_message)
+    file_dict = {}
 
 try:
     does_it_exist = file_dict[DIGITS]
@@ -32,10 +35,10 @@ try:
 except Exception as error_message:
     print(error_message)
     file_dict[DIGITS] = {
-        'addition': {'correct': 0, 'wrong': 0, 'percent-correct': 0, 'total-time': 0, 'average-time-per-problem': 0},
-        'subtraction': {'correct': 0, 'wrong': 0, 'percent-correct': 0, 'total-time': 0, 'average-time-per-problem': 0},
-        'multiplication': {'correct': 0, 'wrong': 0, 'percent-correct': 0, 'total-time': 0, 'average-time-per-problem': 0},
-        'division': {'correct': 0, 'wrong': 0, 'percent-correct': 0, 'total-time': 0, 'average-time-per-problem': 0},
+        'addition': {'correct': 0, 'wrong': 0, 'percent-correct': 0, 'total-time': 0, 'average-time / problem': 0, 'average-time / correct-answer': 0, 'total-time-for-only-correct-answers': 0, 'average-correct-answer-time / correct-answer': 0},
+        'subtraction': {'correct': 0, 'wrong': 0, 'percent-correct': 0, 'total-time': 0, 'average-time / problem': 0, 'average-time / correct-answer': 0, 'total-time-for-only-correct-answers': 0, 'average-correct-answer-time / correct-answer': 0},
+        'multiplication': {'correct': 0, 'wrong': 0, 'percent-correct': 0, 'total-time': 0, 'average-time / problem': 0, 'average-time / correct-answer': 0, 'total-time-for-only-correct-answers': 0, 'average-correct-answer-time / correct-answer': 0},
+        'division': {'correct': 0, 'wrong': 0, 'percent-correct': 0, 'total-time': 0, 'average-time / problem': 0, 'average-time / correct-answer': 0, 'total-time-for-only-correct-answers': 0, 'average-correct-answer-time / correct-answer': 0},
     }
 
 
@@ -60,10 +63,15 @@ def update_stats_for_right_or_wrong_answer(operation, answer1, guess1, time1=0):
     #Update Percent-correct for operation
     stats_of_operation['percent-correct'] = float('{:.2f}'.format(stats_of_operation['correct'] / (stats_of_operation['correct'] + stats_of_operation['wrong']) * 100))
 
-    #Update total-time and average-time-per-problem
+    #Update total-time and average-time / problem
     if time1 != 0:
-        stats_of_operation['total-time'] += float('{:.4f}'.format(time1))
-        stats_of_operation['average-time-per-problem'] = float('{:.4f}'.format(stats_of_operation['total-time'] / (stats_of_operation['correct'])))
+        stats_of_operation['total-time'] = float('{:.4f}'.format(stats_of_operation['total-time'] + time1))
+        stats_of_operation['average-time / problem'] = float('{:.4f}'.format(stats_of_operation['total-time'] / (stats_of_operation['correct'] + stats_of_operation['wrong'])))
+        stats_of_operation['average-time / correct-answer'] = float('{:.4f}'.format(stats_of_operation['total-time'] / (stats_of_operation['correct'])))
+
+        if str(answer1) == str(guess1):
+            stats_of_operation['total-time-for-only-correct-answers'] = float('{:.4f}'.format(stats_of_operation['total-time-for-only-correct-answers'] + time1))
+            stats_of_operation['average-correct-answer-time / correct-answer'] = float('{:.4f}'.format(stats_of_operation['total-time-for-only-correct-answers'] / stats_of_operation['correct']))
 
     #Update Record
     if stats_of_operation != -1:
@@ -105,11 +113,11 @@ def practice_page(operation):
             answer = operand1 * operand2
             symbol = "fa-solid fa-xmark"
         elif operation == 'division':
-            coloring = 'dark'
+            coloring = 'secondary'
             answer = (operand1 / operand2)
-            print(answer)
+            # print(answer)
             answer = "{:.5f}".format(answer)
-            print(answer)
+            # print(answer)
             symbol = "fa-solid fa-divide"
         else:
             coloring = 'light'
@@ -132,14 +140,17 @@ def practice_page(operation):
             temp_coloring = 'success'
             return redirect(url_for('practice_page', operation=operation))
         else:
-            update_stats_for_right_or_wrong_answer(operation, answer, guess, time1=0)
+            update_stats_for_right_or_wrong_answer(operation, answer, guess, time1=elapsed_time)
             print('Incorrect')
             temp_coloring = 'danger'
             return render_template('practice.html', operation=operation, banner_color=coloring, operand1=operand1, operand2=operand2, guess=str(guess), symbol=symbol, temp_coloring=temp_coloring)
 
 
-def check_answer():
-    return 'hi'
+@app.route('/practice/<operation>/stats')
+def stats_page(operation):
+    global temp_coloring
+    temp_coloring = ''
+    return render_template('stats.html', operation=operation, banner_color=coloring, temp_coloring=temp_coloring, dictionary=file_dict, symbol=symbol)
 
 
 if __name__ == "__main__":

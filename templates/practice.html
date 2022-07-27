@@ -1,31 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Practice</title>
+{% include 'header.html' %}
 
-    <!--    Bootstrap-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
-
-    <!-- Font Awesome icons (free version)-->
-    <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
-
-
-    <!-- Custom CSS-->
-    <link rel='stylesheet' href="{{ url_for('static', filename='css/style.css') }}">
-
-</head>
-<body>
-    {% if temp_coloring == '' %}
-    <div class="title bg-{{banner_color}} text-{{text_color}} p-5">
-        {% else %}
-    <div class="title bg-{{temp_coloring}} text-{{text_color}} p-5">
-        {% endif %}
-        <h1 class="fs-1 fw-bolder">
-            {{operation.title()}}
-        </h1>
-    </div>
+{% include 'operation_banner.html' %}
     <div class="row problem">
         <div class="col operands m-5">
             <div class="row operand1">
@@ -54,17 +29,17 @@
                 <div class="col-4 answer pw-0 mw-0">
                     <form action="{{ url_for('practice_page', operation=operation) }}" method="post">
                         <input type="text" class="answer-text pe-0 pw-0 mw-0" name="guess" autofocus>
-                        {% if guess != '' %}
-                        <label>{{ guess }}</label>
-                        {% endif %}
+                        <div class="correction-label">
+                            <label>{{ guess }}</label>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+    <div>
+        {% set stats_page = url_for('stats_page', operation=operation) %}
+        <button class='btn btn-md bg-{{ banner_color }} download-btn p-3 stats-page' type="button" onclick="window.location.href='{{ stats_page }}'"><i class="fa-solid fa-chart-column"></i> {{ operation.title() }} Stats Page</button>
+    </div>
 
-    {% set main_page = url_for('main_page') %}
-    <button class='btn btn-light btn-lg download-btn p-3' type="button" onclick="window.location.href='{{ main_page }}'"><i class="fa-solid fa-house"></i> Main Page</button>
-
-</body>
-</html>
+{% include 'footer.html' %}

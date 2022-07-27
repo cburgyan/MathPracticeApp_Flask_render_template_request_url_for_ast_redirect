@@ -20,6 +20,15 @@ hr {
     outline: none;
 }
 
+table{
+    border: solid 2px grey;
+}
+
+td{
+    border: solid 2px white;
+}
+
+
 .operation-btn{
     text-align: center;
 }
@@ -34,9 +43,19 @@ hr {
     #height: auto;
 }
 
+.main-page{
+    background-color: #9ca5ad;
+}
+
 .symbol{
     width: 2rem;
     text-align: center;
+}
+
+.correction-label{
+    height: 1rem;
+    margin-bottom: 0;
+    padding-bottom: 0;
 }
 
 .title{
@@ -45,4 +64,13 @@ hr {
 
 .answer-text{
     width: 90%;
+}
+
+.key {
+    background-color: #4f5050;
+}
+
+.value{
+    background-color: #bcbebf;
+    text-align: center;
 }

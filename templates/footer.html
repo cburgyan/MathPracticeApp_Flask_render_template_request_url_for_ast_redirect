@@ -1,10 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+    <br>
+    {% set main_page = url_for('main_page') %}
+    <button class='btn btn-lg download-btn p-3 main-page' type="button" onclick="window.location.href='{{ main_page }}'"><i class="fa-solid fa-house"></i> Main Page</button>
 
 </body>
 </html>
