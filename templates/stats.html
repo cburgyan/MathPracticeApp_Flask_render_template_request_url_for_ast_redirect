@@ -6,7 +6,7 @@
 
 <table class="m-5">
     {% for digit, subdict in dictionary.items() %}
-      {% for key, value in subdict[operation].items() %}
+      {% for key, value in subdict[operation][-1].items() %}
        <tr>
            <td class="p-3 key text-white"><h4>{{ key.title() }}: </h4></td>
            <td class="p-3 value"><h4>   {{ value }}</h4></td>

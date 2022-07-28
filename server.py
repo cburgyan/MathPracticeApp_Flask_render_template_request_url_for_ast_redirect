@@ -2,11 +2,22 @@ from flask import Flask, render_template, request, url_for
 import ast
 import random
 import time
-
-
-#{ 'addition': '0', 'subtraction': '0', 'multiplication': '0', 'division': '0' }
-
+from stats_record import StatsRecord
 from werkzeug.utils import redirect
+
+
+def next_stats_record():
+    new_dict = {}
+    new_dict['correct'] = 0
+    new_dict['wrong'] = 0
+    new_dict['percent-correct'] = 0
+    new_dict['total-time'] = 0
+    new_dict['average-time / problem'] = 0
+    new_dict['average-time / correct-answer'] = 0
+    new_dict['total-time-for-only-correct-answers'] = 0
+    new_dict['average-correct-answer-time / correct-answer'] = 0
+    return new_dict
+
 
 app = Flask(__name__)
 app.config["CACHE_TYPE"] = "null"
@@ -21,6 +32,10 @@ temp_coloring = ''
 prev_operation = ''
 start_time = -1
 stop_time = -1
+INITIAL_RECORD = {'correct': 0, 'wrong': 0, 'percent-correct': 0, 'total-time': 0, 'average-time / problem': 0,
+                      'average-time / correct-answer': 0, 'total-time-for-only-correct-answers': 0,
+                      'average-correct-answer-time / correct-answer': 0}
+LIMIT_PER_RECORD = 10
 
 try:
     with open('data.txt', 'r') as file:
@@ -35,10 +50,10 @@ try:
 except Exception as error_message:
     print(error_message)
     file_dict[DIGITS] = {
-        'addition': {'correct': 0, 'wrong': 0, 'percent-correct': 0, 'total-time': 0, 'average-time / problem': 0, 'average-time / correct-answer': 0, 'total-time-for-only-correct-answers': 0, 'average-correct-answer-time / correct-answer': 0},
-        'subtraction': {'correct': 0, 'wrong': 0, 'percent-correct': 0, 'total-time': 0, 'average-time / problem': 0, 'average-time / correct-answer': 0, 'total-time-for-only-correct-answers': 0, 'average-correct-answer-time / correct-answer': 0},
-        'multiplication': {'correct': 0, 'wrong': 0, 'percent-correct': 0, 'total-time': 0, 'average-time / problem': 0, 'average-time / correct-answer': 0, 'total-time-for-only-correct-answers': 0, 'average-correct-answer-time / correct-answer': 0},
-        'division': {'correct': 0, 'wrong': 0, 'percent-correct': 0, 'total-time': 0, 'average-time / problem': 0, 'average-time / correct-answer': 0, 'total-time-for-only-correct-answers': 0, 'average-correct-answer-time / correct-answer': 0},
+        'addition': [next_stats_record()],
+        'subtraction': [next_stats_record()],
+        'multiplication': [next_stats_record()],
+        'division': [next_stats_record()],
     }
 
 
@@ -56,22 +71,25 @@ def update_stats_for_right_or_wrong_answer(operation, answer1, guess1, time1=0):
 
     #Record success or error
     if str(answer1) == str(guess1):
-        stats_of_operation['correct'] += 1
+        if stats_of_operation[-1]['correct'] >= LIMIT_PER_RECORD:
+            stats_of_operation.append(next_stats_record())
+        stats_of_operation[-1]['correct'] += 1
     else:
-        stats_of_operation['wrong'] += 1
+        stats_of_operation[-1]['wrong'] += 1
 
     #Update Percent-correct for operation
-    stats_of_operation['percent-correct'] = float('{:.2f}'.format(stats_of_operation['correct'] / (stats_of_operation['correct'] + stats_of_operation['wrong']) * 100))
+    stats_of_operation[-1]['percent-correct'] = float('{:.2f}'.format(stats_of_operation[-1]['correct'] / (stats_of_operation[-1]['correct'] + stats_of_operation[-1]['wrong']) * 100))
 
     #Update total-time and average-time / problem
     if time1 != 0:
-        stats_of_operation['total-time'] = float('{:.4f}'.format(stats_of_operation['total-time'] + time1))
-        stats_of_operation['average-time / problem'] = float('{:.4f}'.format(stats_of_operation['total-time'] / (stats_of_operation['correct'] + stats_of_operation['wrong'])))
-        stats_of_operation['average-time / correct-answer'] = float('{:.4f}'.format(stats_of_operation['total-time'] / (stats_of_operation['correct'])))
+        stats_of_operation[-1]['total-time'] = float('{:.4f}'.format(stats_of_operation[-1]['total-time'] + time1))
+        stats_of_operation[-1]['average-time / problem'] = float('{:.4f}'.format(stats_of_operation[-1]['total-time'] / (stats_of_operation[-1]['correct'] + stats_of_operation[-1]['wrong'])))
+        if stats_of_operation[-1]['correct'] != 0:
+            stats_of_operation[-1]['average-time / correct-answer'] = float('{:.4f}'.format(stats_of_operation[-1]['total-time'] / (stats_of_operation[-1]['correct'])))
 
         if str(answer1) == str(guess1):
-            stats_of_operation['total-time-for-only-correct-answers'] = float('{:.4f}'.format(stats_of_operation['total-time-for-only-correct-answers'] + time1))
-            stats_of_operation['average-correct-answer-time / correct-answer'] = float('{:.4f}'.format(stats_of_operation['total-time-for-only-correct-answers'] / stats_of_operation['correct']))
+            stats_of_operation[-1]['total-time-for-only-correct-answers'] = float('{:.4f}'.format(stats_of_operation[-1]['total-time-for-only-correct-answers'] + time1))
+            stats_of_operation[-1]['average-correct-answer-time / correct-answer'] = float('{:.4f}'.format(stats_of_operation[-1]['total-time-for-only-correct-answers'] / stats_of_operation[-1]['correct']))
 
     #Update Record
     if stats_of_operation != -1:
@@ -113,7 +131,7 @@ def practice_page(operation):
             answer = operand1 * operand2
             symbol = "fa-solid fa-xmark"
         elif operation == 'division':
-            coloring = 'secondary'
+            coloring = 'secondary[{'
             answer = (operand1 / operand2)
             # print(answer)
             answer = "{:.5f}".format(answer)
