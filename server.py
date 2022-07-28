@@ -5,22 +5,9 @@ import time
 from werkzeug.utils import redirect
 
 
-def next_stats_record():
-    new_dict = {}
-    new_dict['correct'] = 0
-    new_dict['wrong'] = 0
-    new_dict['percent-correct'] = 0
-    new_dict['total-time'] = 0
-    new_dict['average-time / problem'] = 0
-    new_dict['average-time / correct-answer'] = 0
-    new_dict['total-time-for-only-correct-answers'] = 0
-    new_dict['average-correct-answer-time / correct-answer'] = 0
-    return new_dict
-
-
-app = Flask(__name__)
-app.config["CACHE_TYPE"] = "null"
+#Constants and Initializations
 DIGITS = 3
+CORRECT_ANSWERS_PER_RECORD = 50
 redirect_clock = True
 answer = -1
 coloring = 'vanilla'
@@ -31,29 +18,20 @@ temp_coloring = ''
 prev_operation = ''
 start_time = -1
 stop_time = -1
-INITIAL_RECORD = {'correct': 0, 'wrong': 0, 'percent-correct': 0, 'total-time': 0, 'average-time / problem': 0,
-                      'average-time / correct-answer': 0, 'total-time-for-only-correct-answers': 0,
-                      'average-correct-answer-time / correct-answer': 0}
-CORRECT_ANSWERS_PER_RECORD = 50
 
-try:
-    with open('data.txt', 'r') as file:
-        file_dict = ast.literal_eval(file.readline())
-except SyntaxError as error_message:
-    print(error_message)
-    file_dict = {}
 
-try:
-    does_it_exist = file_dict[DIGITS]
-    # print(file_dict)
-except Exception as error_message:
-    print(error_message)
-    file_dict[DIGITS] = {
-        'addition': [next_stats_record()],
-        'subtraction': [next_stats_record()],
-        'multiplication': [next_stats_record()],
-        'division': [next_stats_record()],
-    }
+def next_stats_record():
+    new_dict = {}
+    new_dict['number of digits in operands'] = DIGITS
+    new_dict['correct'] = 0
+    new_dict['wrong'] = 0
+    new_dict['percent-correct'] = 0
+    new_dict['total-time'] = 0
+    new_dict['average-time / problem'] = 0
+    new_dict['average-time / correct-answer'] = 0
+    new_dict['total-time-for-only-correct-answers'] = 0
+    new_dict['average-correct-answer-time / correct-answer'] = 0
+    return new_dict
 
 
 def update_stats_for_right_or_wrong_answer(operation, answer1, guess1, time1=0):
@@ -96,6 +74,38 @@ def update_stats_for_right_or_wrong_answer(operation, answer1, guess1, time1=0):
             file.write(str(file_dict))
 
 
+#Create Flask Object
+app = Flask(__name__)
+app.config["CACHE_TYPE"] = "null"
+
+
+# Get Data from data.txt (and store it in file_dict,
+# but if no data is found in data.txt then initialize file_dict
+# to empty dict (in preparation for the next step of creating
+# a data record))
+try:
+    with open('data.txt', 'r') as file:
+        file_dict = ast.literal_eval(file.readline())
+except SyntaxError as error_message:
+    print(error_message)
+    file_dict = {}
+
+
+# Check to assure data records exist for math problems
+# with operands that have a certain number of digits (equal to
+# the variable "DIGITS") in them (but, if there aren't records
+# for that number of digits, then create a new record for it)
+try:
+    does_it_exist = file_dict[DIGITS]
+    # print(file_dict)
+except Exception as error_message:
+    print(error_message)
+    file_dict[DIGITS] = {
+        'addition': [next_stats_record()],
+        'subtraction': [next_stats_record()],
+        'multiplication': [next_stats_record()],
+        'division': [next_stats_record()],
+    }
 
 
 @app.route('/')
@@ -130,7 +140,7 @@ def practice_page(operation):
             answer = operand1 * operand2
             symbol = "fa-solid fa-xmark"
         elif operation == 'division':
-            coloring = 'secondary[{'
+            coloring = 'secondary'
             answer = (operand1 / operand2)
             # print(answer)
             answer = "{:.5f}".format(answer)
