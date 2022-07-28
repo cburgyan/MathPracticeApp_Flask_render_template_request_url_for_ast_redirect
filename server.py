@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, url_for
 import ast
 import random
 import time
-from stats_record import StatsRecord
 from werkzeug.utils import redirect
 
 
@@ -35,7 +34,7 @@ stop_time = -1
 INITIAL_RECORD = {'correct': 0, 'wrong': 0, 'percent-correct': 0, 'total-time': 0, 'average-time / problem': 0,
                       'average-time / correct-answer': 0, 'total-time-for-only-correct-answers': 0,
                       'average-correct-answer-time / correct-answer': 0}
-LIMIT_PER_RECORD = 10
+CORRECT_ANSWERS_PER_RECORD = 50
 
 try:
     with open('data.txt', 'r') as file:
@@ -71,7 +70,7 @@ def update_stats_for_right_or_wrong_answer(operation, answer1, guess1, time1=0):
 
     #Record success or error
     if str(answer1) == str(guess1):
-        if stats_of_operation[-1]['correct'] >= LIMIT_PER_RECORD:
+        if stats_of_operation[-1]['correct'] >= CORRECT_ANSWERS_PER_RECORD:
             stats_of_operation.append(next_stats_record())
         stats_of_operation[-1]['correct'] += 1
     else:
@@ -168,7 +167,8 @@ def practice_page(operation):
 def stats_page(operation):
     global temp_coloring
     temp_coloring = ''
-    return render_template('stats.html', operation=operation, banner_color=coloring, temp_coloring=temp_coloring, dictionary=file_dict, symbol=symbol)
+
+    return render_template('stats.html', operation=operation, banner_color=coloring, temp_coloring=temp_coloring, dictionary=file_dict, symbol=symbol, correct_answers_per_record=CORRECT_ANSWERS_PER_RECORD)
 
 
 if __name__ == "__main__":
