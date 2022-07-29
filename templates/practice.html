@@ -7,7 +7,11 @@
                 <div class="col-1 text-end">
                 </div>
                 <div class="col-3 operand1">
+                    {% if operation != 'addition' %}
                     <h1>{{ operand1 }}</h1>
+                    {% else %}
+                    <h1 class="flash">{{ operand1 }}</h1>
+                    {% endif %}
                 </div>
             </div>
             <div class="row operand2">
@@ -15,7 +19,11 @@
                     <h1><i class="{{ symbol }}"></i></h1>
                 </div>
                 <div class="col-3 operand2">
+                    {% if operation != 'addition' %}
                     <h1>{{ operand2 }}</h1>
+                    {% else %}
+                    <h1 class="flash">{{ operand2 }}</h1>
+                    {% endif %}
                 </div>
 
             </div>

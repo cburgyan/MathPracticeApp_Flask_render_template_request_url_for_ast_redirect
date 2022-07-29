@@ -74,3 +74,18 @@ td{
     background-color: #bcbebf;
     text-align: center;
 }
+
+.flash {
+   animation-name: flash;
+    animation-duration: 6s;
+    #animation-timing-function: linear;
+    animation-iteration-count: 1;
+    #animation-direction: alternate;
+    animation-play-state: running;
+    color: white;
+}
+
+@keyframes flash {
+    from {color: black;}
+    to {color: white;}
+}
