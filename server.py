@@ -100,6 +100,11 @@ def set_operation_specific_variable(operation1):
         answer = "{:.5f}".format(answer)
         # print(answer)
         symbol = "fa-solid fa-divide"
+
+    elif operation1 == 'special addition':
+        coloring = 'lightgreen'
+        answer = operand1 + operand2
+        symbol = 'fa-solid fa-plus'
     else:
         coloring = 'light'
         print('Something went wrong.')
@@ -127,6 +132,9 @@ def practice_page(operation):
         operand1 = random.randint(10 ** (DIGITS - 1), 10 ** DIGITS - 1)
         operand2 = random.randint(10 ** (DIGITS - 1), 10 ** DIGITS - 1)
 
+        if operation == 'special addition':
+            operand1 = random.randint(10 ** (DIGITS - 1), 10 ** (DIGITS + 3) - 1)
+            operand2 = random.randint(1, 9) * random.randint(1, 9)
         # Find Associated Color and Symbol For Type Of Operation, As Well
         # As Answer
         set_operation_specific_variable(operation)

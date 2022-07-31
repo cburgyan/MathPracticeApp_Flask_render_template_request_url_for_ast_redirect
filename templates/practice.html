@@ -7,10 +7,10 @@
                 <div class="col-1 text-end">
                 </div>
                 <div class="col-3 operand1">
-                    {% if operation != 'addition' %}
-                    <h1>{{ operand1 }}</h1>
+                    {% if operation != 'addition' and operation != 'special addition' %}
+                    <h1 class="operand">{{ operand1 }}</h1>
                     {% else %}
-                    <h1 class="flash">{{ operand1 }}</h1>
+                    <h1 class="flash operand">{{ operand1 }}</h1>
                     {% endif %}
                 </div>
             </div>
@@ -19,10 +19,10 @@
                     <h1><i class="{{ symbol }}"></i></h1>
                 </div>
                 <div class="col-3 operand2">
-                    {% if operation != 'addition' %}
-                    <h1>{{ operand2 }}</h1>
+                    {% if operation != 'addition' and operation != 'special addition' %}
+                    <h1 class="operand">{{ operand2 }}</h1>
                     {% else %}
-                    <h1 class="flash">{{ operand2 }}</h1>
+                    <h1 class="flash operand">{{ operand2 }}</h1>
                     {% endif %}
                 </div>
 
@@ -47,7 +47,11 @@
     </div>
     <div>
         {% set stats_page = url_for('stats_page', operation=operation) %}
+        {% if operation == 'special addition' %}
+        <button class='btn btn-md special-addition download-btn p-3 stats-page' type="button" onclick="window.location.href='{{ stats_page }}'"><i class="fa-solid fa-chart-column"></i> {{ operation.title() }} Stats Page</button>
+        {% else %}
         <button class='btn btn-md bg-{{ banner_color }} download-btn p-3 stats-page' type="button" onclick="window.location.href='{{ stats_page }}'"><i class="fa-solid fa-chart-column"></i> {{ operation.title() }} Stats Page</button>
+        {% endif %}
     </div>
 
 {% include 'footer.html' %}

@@ -89,3 +89,12 @@ td{
     from {color: black;}
     to {color: white;}
 }
+
+.special-addition{
+    background-color: lightgreen;
+}
+
+.operand{
+    text-align: right;
+    padding-right: 3rem;
+}

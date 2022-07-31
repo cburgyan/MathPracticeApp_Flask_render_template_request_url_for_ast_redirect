@@ -7,7 +7,11 @@
 
 <div>
     {% set practice_page = url_for('practice_page', operation=operation) %}
+    {% if operation == 'special addition' %}
+    <button class='btn btn-sm special-addition download-btn p-3 stats-page' type="button" onclick="window.location.href='{{ practice_page }}'"><i class="{{ symbol }}"></i> {{ operation.title() }} (Back to Practice)</button>
+    {% else %}
     <button class='btn btn-sm bg-{{ banner_color }} download-btn p-3 stats-page' type="button" onclick="window.location.href='{{ practice_page }}'"><i class="{{ symbol }}"></i> {{ operation.title() }} (Back to Practice)</button>
+    {% endif %}
 </div>
 <h5 class="p-3">Tables Displayed From Newest To Oldest (each table represents {{ correct_answers_per_record }} correct answers at most)</h5>
 {% for digit, subdict in dictionary.items() %}
@@ -26,6 +30,10 @@
 
     <div>
         {% set practice_page = url_for('practice_page', operation=operation) %}
+        {% if operation == 'special addition' %}
+        <button class='btn btn-md special-addition download-btn p-3 stats-page' type="button" onclick="window.location.href='{{ practice_page }}'"><i class="{{ symbol }}"></i> {{ operation.title() }} (Back to Practice)</button>
+        {% else %}
         <button class='btn btn-md bg-{{ banner_color }} download-btn p-3 stats-page' type="button" onclick="window.location.href='{{ practice_page }}'"><i class="{{ symbol }}"></i> {{ operation.title() }} (Back to Practice)</button>
+        {% endif %}
     </div>
 {% include 'footer.html' %}
