@@ -50,6 +50,9 @@ def update_stats_for_right_or_wrong_answer(operation, answer1, guess1, time1=0):
         stats_of_operation = file_dict[DIGITS]['multiplication']
     elif operation == 'division':
         stats_of_operation = file_dict[DIGITS]['division']
+    elif operation == 'special addition':
+        stats_of_operation = file_dict[DIGITS]['special addition']
+
 
     # Record success or error
     if str(answer1) == str(guess1):

@@ -1,4 +1,6 @@
 body{
+    background-color: #333;
+    color: white;
 }
 
 div.col{
@@ -77,17 +79,17 @@ td{
 
 .flash {
    animation-name: flash;
-    animation-duration: 6s;
+    animation-duration: 3s;
     #animation-timing-function: linear;
     animation-iteration-count: 1;
     #animation-direction: alternate;
     animation-play-state: running;
-    color: white;
+    color: #333;
 }
 
 @keyframes flash {
-    from {color: black;}
-    to {color: white;}
+    from {color: white;}
+    to {color: #333;}
 }
 
 .special-addition{
