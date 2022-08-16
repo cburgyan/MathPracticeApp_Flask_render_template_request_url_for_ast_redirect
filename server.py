@@ -1,8 +1,8 @@
-from flask import Flask, render_template, request, url_for
+from flask import Flask, render_template, request, url_for, redirect
 import ast
 import random
 import time
-from werkzeug.utils import redirect
+# from werkzeug.utils import redirect
 
 
 # Constants and Initializations
